@@ -33,7 +33,7 @@ def sendMsg(to_number, from_number, body):
         body=body,
         from_=from_number,
         to=to_number,
-        max_price=0.0075
+        # max_price=0.0075
         )
     
     print(message.sid)
