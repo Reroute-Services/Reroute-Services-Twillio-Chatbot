@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 
 
-def sendMsg():
+def sendMsg(to_number, from_number):
     # Find your Account SID and Auth Token at twilio.com/console
     # and set the environment variables. See http://twil.io/secure
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
@@ -16,10 +16,9 @@ def sendMsg():
 
     message = client.messages \
                     .create(
-                        body="Join Earth's mightiest heroes. Like Kevin Bacon.",
-                        from_='+15017122661',
-                        to='+15558675310'
-                    )
+                        body="Hey! This is Ben From Reroute Services.",
+                        from_=from_number,
+                        to=to_number)
 
     print(message.sid)
 
@@ -28,9 +27,10 @@ def sendMsg():
 def voice():
     """Respond to incoming phone calls with a 'Hello world' message"""
     # Start our TwiML response
-    print(type(request.values))
-    print(request.form['Caller'])
-    print(request.values)
+    # print(type(request.values))
+    caller_no = request.form['From']
+    to_number = request.form['To']
+    # print(request.values)
     resp = VoiceResponse()
 
     # Read a message aloud to the caller
@@ -39,6 +39,7 @@ def voice():
     resp.say("Now Hanging Up!")
     resp.hangup()
 
+    sendMsg(caller_no, to_number)
 
     return str(resp)
 
