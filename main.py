@@ -31,8 +31,8 @@ def sendMsg(to_number, from_number, body):
 
     message = client.messages.create(
         body=body,
-        from_=from_number,
-        to=to_number,
+        from_="whatsapp:"+from_number,
+        to="whatsapp:"+to_number,
         # max_price=0.0075
         )
     
@@ -68,7 +68,9 @@ def sms():
     print("Message: ", request.values)
     from_no = request.form['From']
     to_number = request.form['To']
-    response_msg = chat_session_handler(from_no, to_number, message_body="Hello, Im under the water!")
+    message_body = request.form['Body']
+
+    response_msg = chat_session_handler(from_no, to_number, message_body=message_body)
 
     resp = MessagingResponse()
 
