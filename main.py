@@ -31,8 +31,8 @@ def sendMsg(to_number, from_number, body):
 
     message = client.messages.create(
         body=body,
-        from_="whatsapp:"+from_number,
-        to="whatsapp:"+to_number,
+        from_=from_number,
+        to=to_number,
         # max_price=0.0075
         )
     
