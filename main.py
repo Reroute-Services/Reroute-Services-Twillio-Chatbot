@@ -68,9 +68,9 @@ def sms():
     print("Message: ", request.values)
     from_no = request.form['From']
     to_number = request.form['To']
-    message_body = request.form['Body']
+    # message_body = request.form['Body']
 
-    response_msg = chat_session_handler(from_no, to_number, message_body=message_body)
+    response_msg = chat_session_handler(from_no, to_number, message_body="message_body")
 
     resp = MessagingResponse()
 
