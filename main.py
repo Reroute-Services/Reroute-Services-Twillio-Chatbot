@@ -2,25 +2,40 @@ from flask import Flask, request
 from twilio.twiml.voice_response import VoiceResponse
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
+from chatbot import ChatBot
 import os
 
 
 app = Flask(__name__)
 
+CHAT_SESSIONS = {}
 
-def sendMsg(to_number, from_number):
+
+def chat_session_handler(caller_no, to_number, message_body=None):
+    if caller_no not in CHAT_SESSIONS:
+        body = "You just missed a call from {}".format(caller_no)
+        CHAT_SESSIONS[caller_no] = ChatBot()
+        response_body = CHAT_SESSIONS[caller_no].chat_agent(body)
+        sendMsg(caller_no, to_number, response_body)
+    else:
+        response_body = CHAT_SESSIONS[caller_no].chat_agent(message_body)
+        return response_body
+
+
+def sendMsg(to_number, from_number, body):
     # Find your Account SID and Auth Token at twilio.com/console
     # and set the environment variables. See http://twil.io/secure
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token)
 
-    message = client.messages \
-                    .create(
-                        body="Hey! This is Ben From Reroute Services.",
-                        from_=from_number,
-                        to=to_number)
-
+    message = client.messages.create(
+        body=body,
+        from_=from_number,
+        to=to_number,
+        max_price=0.0075
+        )
+    
     print(message.sid)
 
 
@@ -40,18 +55,26 @@ def voice():
     resp.say("Now Hanging Up!")
     resp.hangup()
 
-    sendMsg(caller_no, to_number)
+    chat_session_handler(caller_no, to_number)
+
+    # sendMsg(caller_no, to_number)
 
     return str(resp)
 
 @app.route("/sms", methods=['GET', 'POST'])
-def sms_reply():
+def sms():
     """Respond to incoming calls with a simple text message."""
     # Start our TwiML response
+    print("Message: ", request.values)
+    from_no = request.form['From']
+    to_number = request.form['To']
+    response_msg = chat_session_handler(from_no, to_number, message_body="Hello, Im under the water!")
+
     resp = MessagingResponse()
 
     # Add a message
-    resp.message("The Robots are coming! Head for the hills!")
+    # resp.message("The Robots are coming! Head for the hills!")
+    resp.message(response_msg)
 
     return str(resp)
 
