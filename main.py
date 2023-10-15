@@ -28,11 +28,14 @@ def sendMsg():
 def voice():
     """Respond to incoming phone calls with a 'Hello world' message"""
     # Start our TwiML response
+    print(type(request.values))
+    print(request.form['Caller'])
     print(request.values)
     resp = VoiceResponse()
 
     # Read a message aloud to the caller
-    resp.say("Hello! This is a Test Call for Reroute Services!", voice='Polly.Amy')
+    # resp.say("Hello! This is a Test Call for Reroute Services!", voice='Polly.Amy')
+    # resp.say("Hello! This is a Test Call for Reroute Services!")
     resp.say("Now Hanging Up!")
     resp.hangup()
 
@@ -40,4 +43,4 @@ def voice():
     return str(resp)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

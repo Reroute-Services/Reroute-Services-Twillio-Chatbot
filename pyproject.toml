@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "repl-nix-reroute-services-twillio-chatbot"
+version = "0.1.0"
+description = ""
+authors = ["Replit user <<>>"]
+readme = "README.md"
+packages = [{include = "repl_nix_reroute_services_twillio_chatbot"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+flask = "^3.0.0"
+python-dotenv = "^1.0.0"
+twilio = "^8.9.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
