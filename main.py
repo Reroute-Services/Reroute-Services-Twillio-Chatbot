@@ -14,9 +14,8 @@ CHAT_SESSIONS = {}
 def chat_session_handler(caller_no, to_number, message_body=None):
     if caller_no not in CHAT_SESSIONS:
         body = "You just missed a call from {}".format(caller_no)
-        chtbt = ChatBot()
-        CHAT_SESSIONS[caller_no] = chtbt.chat_agent
-        response_body = CHAT_SESSIONS[caller_no](body)
+        CHAT_SESSIONS[caller_no] = ChatBot()
+        response_body = CHAT_SESSIONS[caller_no].chat_agent(body)
         sendMsg(caller_no, to_number, response_body)
     else:
         response_body = CHAT_SESSIONS[caller_no].chat_agent(message_body)
