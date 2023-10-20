@@ -99,7 +99,7 @@ def sms():
 def whatsapp():
     """Respond to incoming calls with a simple text message."""
     # Start our TwiML response
-    print("Message: ", request.values)
+    print("Whatsapp Message: ", request.values)
     from_no = request.form['From']
     to_number = request.form['To']
     message_body = request.form['Body']
@@ -112,6 +112,26 @@ def whatsapp():
     # Add a message
     # resp.message("The Robots are coming! Head for the hills!")
     resp.message(response_msg)
+
+    return str(resp)
+
+@app.route("/whatsappfallback", methods=['GET', 'POST'])
+def whatsapp():
+    """Respond to incoming calls with a simple text message."""
+    # Start our TwiML response
+    print("FallBack Message: ", request.values)
+    from_no = request.form['From']
+    to_number = request.form['To']
+    message_body = request.form['Body']
+
+    # response_msg = chat_session_handler(from_no, to_number, message_body=message_body)
+    # response_msg = chatbot.conversation_handler(from_no, message_body)
+
+    resp = MessagingResponse()
+
+    # Add a message
+    # resp.message("The Robots are coming! Head for the hills!")
+    # resp.message(response_msg)
 
     return str(resp)
 
