@@ -46,16 +46,29 @@ def voice():
     # print(type(request.values))
     caller_no = request.form['From']
     to_number = request.form['To']
-    # print(request.values)
+    callSid = request.form['CallSid']
+    print(request.values)
+
+    # account_sid = os.environ['TWILIO_ACCOUNT_SID']
+    # auth_token = os.environ['TWILIO_AUTH_TOKEN']
+    # client = Client(account_sid, auth_token)
+
+    # recording = client.calls(callSid) \
+    #                   .recordings \
+    #                   .create()
+
+    # print(recording.sid)
+  
     resp = VoiceResponse()
 
     # Read a message aloud to the caller
     # resp.say("Hello! This is a Test Call for Reroute Services!", voice='Polly.Amy')
     # resp.say("Hello! This is a Test Call for Reroute Services!")
-    resp.say("Now Hanging Up!")
+    resp.say("Now Recording Up!")
+    resp.record(max_length=50)
     resp.hangup()
 
-    chat_session_handler(caller_no, to_number)
+    # chat_session_handler(caller_no, to_number)
 
     # sendMsg(caller_no, to_number)
 
