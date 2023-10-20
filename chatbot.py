@@ -50,7 +50,7 @@ class ChatBot:
                         You should first know what customer wants and after that show them those packages. Your response should be welcoming and assuring to the customer. You can ask their names to start the conversation. Your duty will be to provide info about the business. If you don't know something or can't find it, please say that you don't know it. Please make the responses as short as possible to save sms costs."""
                 ),
                 # The `variable_name` here is what must align with memory
-                # MessagesPlaceholder(variable_name=self.memory_key),
+                MessagesPlaceholder(variable_name=self.memory_key),
                 HumanMessagePromptTemplate.from_template("{input}")
             ]
         )
@@ -61,7 +61,7 @@ class ChatBot:
         conversation_agent = ConversationChain(
             llm=llm,
             prompt=prompt,
-            verbose=False,
+            verbose=True,
             memory=memory
         )
 
