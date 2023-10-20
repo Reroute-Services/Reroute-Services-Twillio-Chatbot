@@ -2,11 +2,13 @@ from flask import Flask, request
 from twilio.twiml.voice_response import VoiceResponse
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
-from chatbot import ChatBot
+from chatbotpro import ChatBot
 import os
 
 
 app = Flask(__name__)
+
+chatbot = ChatBot()
 
 CHAT_SESSIONS = {}
 
@@ -102,7 +104,8 @@ def whatsapp():
     to_number = request.form['To']
     message_body = request.form['Body']
 
-    response_msg = chat_session_handler(from_no, to_number, message_body=message_body)
+    # response_msg = chat_session_handler(from_no, to_number, message_body=message_body)
+    response_msg = chatbot.conversation_handler(from_no, message_body)
 
     resp = MessagingResponse()
 

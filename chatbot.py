@@ -1,6 +1,7 @@
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import LLMChain, ConversationChain
 from langchain.memory import ConversationBufferMemory
+from langchain.memory.token_buffer import ConversationTokenBufferMemory
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder, SystemMessagePromptTemplate, HumanMessagePromptTemplate, AIMessagePromptTemplate
 from dotenv import load_dotenv, find_dotenv
 import uuid
@@ -57,7 +58,15 @@ class ChatBot:
 
         # Notice that we `return_messages=True` to fit into the MessagesPlaceholder
         # Notice that `"chat_history"` aligns with the MessagesPlaceholder name
-        memory = ConversationBufferMemory(memory_key=self.memory_key, input_key='input', output_key='response', return_messages=True)
+        # memory = ConversationBufferMemory(memory_key=self.memory_key, input_key='input', output_key='response', return_messages=True)
+        memory = ConversationTokenBufferMemory(
+            memory_key=self.memory_key,
+            return_messages=True,
+            input_key="input",
+            output_key="response",
+            llm=llm,
+            max_token_limit=2000,
+        )
         conversation_agent = ConversationChain(
             llm=llm,
             prompt=prompt,
