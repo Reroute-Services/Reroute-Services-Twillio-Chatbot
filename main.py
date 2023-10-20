@@ -116,8 +116,9 @@ def whatsapp():
     resp.message(response_msg)
     
     end = time.time()
-    print("Time:", start-end)
-    if (start - end) >= 14:
+    total_time = end-start
+    print("Time:", total_time)
+    if total_time >= 14:
         print("Timeout!!!!")
         # LOST_MESSAGES[from_no] = {"input":message_body, "response":resp}
         sendWhatsappMsg(from_no, to_number, response_msg)
