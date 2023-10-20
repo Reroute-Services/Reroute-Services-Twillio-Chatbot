@@ -3,6 +3,7 @@ from twilio.twiml.voice_response import VoiceResponse
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
 from chatbotpro import ChatBot
+import time
 import os
 
 
@@ -10,18 +11,17 @@ app = Flask(__name__)
 
 chatbot = ChatBot()
 
-CHAT_SESSIONS = {}
+LOST_MESSAGES = {}
 
-
-def chat_session_handler(caller_no, to_number, message_body=None):
-    if caller_no not in CHAT_SESSIONS:
-        body = "You just missed a call from {}".format(caller_no)
-        CHAT_SESSIONS[caller_no] = ChatBot()
-        response_body = CHAT_SESSIONS[caller_no].chat_agent(body)
-        sendMsg(caller_no, to_number, response_body)
-    else:
-        response_body = CHAT_SESSIONS[caller_no].chat_agent(message_body)
-        return response_body
+# def chat_session_handler(caller_no, to_number, message_body=None):
+#     if caller_no not in CHAT_SESSIONS:
+#         body = "You just missed a call from {}".format(caller_no)
+#         CHAT_SESSIONS[caller_no] = ChatBot()
+#         response_body = CHAT_SESSIONS[caller_no].chat_agent(body)
+#         sendMsg(caller_no, to_number, response_body)
+#     else:
+#         response_body = CHAT_SESSIONS[caller_no].chat_agent(message_body)
+#         return response_body
 
 
 def sendMsg(to_number, from_number, body):
@@ -85,18 +85,20 @@ def sms():
     to_number = request.form['To']
     message_body = request.form['Body']
 
-    response_msg = chat_session_handler(from_no, to_number, message_body=message_body)
+    # response_msg = chat_session_handler(from_no, to_number, message_body=message_body)
 
     resp = MessagingResponse()
 
     # Add a message
-    # resp.message("The Robots are coming! Head for the hills!")
-    resp.message(response_msg)
+    resp.message("The Robots are coming! Head for the hills!")
+    # resp.message(response_msg)
 
     return str(resp)
 
 @app.route("/whatsapp", methods=['GET', 'POST'])
 def whatsapp():
+    start = time.time()
+
     """Respond to incoming calls with a simple text message."""
     # Start our TwiML response
     print("Whatsapp Message: ", request.values)
@@ -112,6 +114,11 @@ def whatsapp():
     # Add a message
     # resp.message("The Robots are coming! Head for the hills!")
     resp.message(response_msg)
+    
+    end = time.time()
+
+    if (start - end) > 14:
+        LOST_MESSAGES[from_no] = {"input":message_body, "response":resp}
 
     return str(resp)
 
@@ -124,14 +131,14 @@ def whatsappfallback():
     to_number = request.form['To']
     message_body = request.form['Body']
 
-    # response_msg = chat_session_handler(from_no, to_number, message_body=message_body)
-    # response_msg = chatbot.conversation_handler(from_no, message_body)
-
     resp = MessagingResponse()
-
-    # Add a message
-    # resp.message("The Robots are coming! Head for the hills!")
-    # resp.message(response_msg)
+    if from_no in LOST_MESSAGES.keys() and LOST_MESSAGES[from_no]['input'] == message_body:
+        resp = LOST_MESSAGES[from_no]["response"]
+        del LOST_MESSAGES[from_no]
+        print("Bingo!!!!!!!!!!!!!!!!!!!!!!!!")
+    else:
+        time.sleep(15)
+        resp.message("Waiting")
 
     return str(resp)
 
