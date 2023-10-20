@@ -116,7 +116,7 @@ def whatsapp():
     return str(resp)
 
 @app.route("/whatsappfallback", methods=['GET', 'POST'])
-def whatsapp():
+def whatsappfallback():
     """Respond to incoming calls with a simple text message."""
     # Start our TwiML response
     print("FallBack Message: ", request.values)
