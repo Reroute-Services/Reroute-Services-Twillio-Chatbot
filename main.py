@@ -24,21 +24,21 @@ LOST_MESSAGES = {}
 #         return response_body
 
 
-def sendMsg(to_number, from_number, body):
+def sendWhatsappMsg(to_number, from_number, body):
     # Find your Account SID and Auth Token at twilio.com/console
     # and set the environment variables. See http://twil.io/secure
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token)
 
-    message = client.messages.create(
-        body=body,
-        from_=from_number,
-        to=to_number,
-        # max_price=0.0075
+    message = client.messages \
+        .create(
+            from_=from_number,
+            body=body,
+            to=to_number
         )
     
-    print(message.sid)
+    print("Whatsapp Message Chased!:",message.sid)
 
 
 @app.route("/voice", methods=['GET', 'POST'])
@@ -118,7 +118,8 @@ def whatsapp():
     end = time.time()
 
     if (start - end) > 14:
-        LOST_MESSAGES[from_no] = {"input":message_body, "response":resp}
+        # LOST_MESSAGES[from_no] = {"input":message_body, "response":resp}
+        sendWhatsappMsg(from_no, to_number, response_msg)
 
     return str(resp)
 
