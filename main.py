@@ -94,7 +94,7 @@ def sms():
     return str(resp)
 
 @app.route("/whatsapp", methods=['GET', 'POST'])
-def sms():
+def whatsapp():
     """Respond to incoming calls with a simple text message."""
     # Start our TwiML response
     print("Message: ", request.values)
