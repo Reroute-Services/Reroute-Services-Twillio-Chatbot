@@ -10,8 +10,9 @@ load_dotenv(find_dotenv()) # read local .env file
 class ChatBot:
     def __init__(self):
         self.llm_temperature = 0.0
-        self.memory_key = "chat_history" + uuid.uuid4().hex
+        self.memory_key = "chat_history"
         self.conversation_agent = None
+        # self.memory_key = "chat_history" + uuid.uuid4().hex
 
     def chat_agent(self, body):
         if self.conversation_agent == None:
@@ -56,7 +57,7 @@ class ChatBot:
 
         # Notice that we `return_messages=True` to fit into the MessagesPlaceholder
         # Notice that `"chat_history"` aligns with the MessagesPlaceholder name
-        memory = ConversationBufferMemory(memory_key=self.memory_key,return_messages=True)
+        memory = ConversationBufferMemory(memory_key=self.memory_key, input_key='input', output_key='response', return_messages=True)
         conversation_agent = ConversationChain(
             llm=llm,
             prompt=prompt,
