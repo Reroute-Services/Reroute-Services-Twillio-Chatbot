@@ -80,5 +80,24 @@ def sms():
 
     return str(resp)
 
+@app.route("/whatsapp", methods=['GET', 'POST'])
+def sms():
+    """Respond to incoming calls with a simple text message."""
+    # Start our TwiML response
+    print("Message: ", request.values)
+    from_no = request.form['From']
+    to_number = request.form['To']
+    message_body = request.form['Body']
+
+    response_msg = chat_session_handler(from_no, to_number, message_body=message_body)
+
+    resp = MessagingResponse()
+
+    # Add a message
+    # resp.message("The Robots are coming! Head for the hills!")
+    resp.message(response_msg)
+
+    return str(resp)
+
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
